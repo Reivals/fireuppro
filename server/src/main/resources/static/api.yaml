@@ -1,0 +1,160 @@
+swagger: "2.0"
+info:
+  description: "Tic tac toe server"
+  version: "1.0.0"
+  title: "Tic tac toe server"
+  contact:
+    email: "michkarkowski@vp.pl"
+host: "tbd"
+basePath: "/v1"
+tags:
+  - name: "board"
+    description: "Board domain"
+schemes:
+  - "http"
+paths:
+  /boards/{boardId}/makeMove:
+    patch:
+      tags:
+        - "board"
+      summary: "Make move"
+      description: "Make move"
+      operationId: "makeMove"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "move"
+          description: "Object represents move"
+          required: true
+          schema:
+            $ref: "#/definitions/MoveDTO"
+        - name: "boardId"
+          in: "path"
+          description: "ID of the game"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/BoardDTO"
+        "400":
+          description: "Invalid request data"
+  /boards/{boardId}/gameEnded:
+    get:
+      tags:
+        - "board"
+      summary: "Check if game ended"
+      description: "Check if game ended"
+      operationId: "checkIfGameEnded"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "boardId"
+          in: "path"
+          description: "ID of the game"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GameDTO"
+        "404":
+          description: "Board not find"
+  /boards/{boardId}:
+    get:
+      tags:
+        - "board"
+      summary: "Get board"
+      description: "Get board"
+      operationId: "getBoard"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "boardId"
+          in: "path"
+          description: "ID of the game"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/BoardDTO"
+        "404":
+          description: "Board not find"
+  /boards/{boardId}/join:
+    patch:
+      tags:
+        - "board"
+      summary: "Join to board"
+      description: "Join to board"
+      operationId: "joinToBoard"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "boardId"
+          in: "path"
+          description: "ID of the game"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PlayerDTO"
+        "404":
+          description: "Board not find"
+  /boards:
+    post:
+      tags:
+        - "board"
+      summary: "Create board"
+      description: "Create board"
+      operationId: "createBoard"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/BoardDTO"
+definitions:
+  PlayerDTO:
+    type: "object"
+    properties:
+      playerSign:
+        type: "string"
+        description: "sign"
+        enum:
+          - "X"
+          - "O"
+  GameDTO:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        description: "game status"
+        enum:
+          - "DRAW"
+          - "RUNNING"
+          - "O"
+          - "X"
+  MoveDTO:
+    type: "object"
+    properties:
+      player:
+        $ref: "#/definitions/PlayerDTO"
+      position:
+        type: "string"
+  BoardDTO:
+    type: "object"
+    properties:
+      board:
+        type: "array"
+        items:
+          type: "string"
+      id:
+        type: "string"
